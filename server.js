@@ -30,6 +30,22 @@ const users = [
 app.use(express.json());
 
 // define login dependency when checking logins
+app.use((req, res, next) => {
+  const { username, password } = req.body;
+  const foundUser = user.find((user) => {
+    return user.name === username;
+  });
+  if (!foundUser || foundUser.password != password) {
+    return res.send("You are not authorised");
+  }
+  req.user = foundUser;
+  next();
+});
+
+
+app.post('/login', (req, res) => {
+  res.send("You have reached inside the login page!");
+});
 
 // a protected endpoint where if accessed without authorisation, hit with a 403 error
 
